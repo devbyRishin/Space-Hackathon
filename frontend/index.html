@@ -5,90 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Orbital Insight — ACM Dashboard</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #0a0e1a; color: #e0e6f0; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
-#app { display: grid; grid-template-columns: 1fr 340px; grid-template-rows: 56px 1fr 220px; height: 100vh; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0e1a; color:#e0e6f0; font-family:'Segoe UI',sans-serif; overflow:hidden; }
+#app { display:grid; grid-template-columns:1fr 340px; grid-template-rows:56px 1fr 220px; height:100vh; }
+
 #topbar {
-  grid-column: 1 / -1;
-  background: #0d1224;
-  border-bottom: 1px solid #1e2d4a;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  gap: 16px;
+  grid-column:1/-1; background:#0d1224; border-bottom:1px solid #1e2d4a;
+  display:flex; align-items:center; padding:0 20px; gap:12px;
 }
-#topbar h1 { font-size: 16px; font-weight: 700; color: #4fc3f7; letter-spacing: 2px; margin-right: 8px; }
-.pill {
-  background: #131929;
-  border: 1px solid #1e3a5f;
-  border-radius: 20px;
-  padding: 3px 12px;
-  font-size: 11px;
-  color: #90caf9;
-  white-space: nowrap;
-}
-.pill span { color: #fff; font-weight: 700; margin-left: 4px; }
-#conn { margin-left: auto; font-size: 11px; font-weight: 600; }
-#globe-container { position: relative; background: #060912; overflow: hidden; }
-#globe-canvas { width: 100%; height: 100%; display: block; }
-#right-panel {
-  background: #0d1224;
-  border-left: 1px solid #1e2d4a;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.rp-section {
-  border-bottom: 1px solid #1e2d4a;
-  padding: 8px 10px;
-  overflow: hidden;
-}
-.rp-title {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #4fc3f7;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-#bottom-panel {
-  grid-column: 1 / -1;
-  background: #0d1224;
-  border-top: 1px solid #1e2d4a;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-.bp-section {
-  padding: 8px 12px;
-  border-right: 1px solid #1e2d4a;
-  overflow: hidden;
-}
-.bp-section:last-child { border-right: none; }
-.bp-title {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #4fc3f7;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.cdm-item {
-  padding: 5px 8px;
-  margin-bottom: 3px;
-  border-radius: 4px;
-  font-size: 10px;
-  border-left: 3px solid;
-  line-height: 1.5;
-}
+#topbar h1 { font-size:14px; font-weight:700; color:#4fc3f7; letter-spacing:2px; margin-right:6px; }
+.pill { background:#131929; border:1px solid #1e3a5f; border-radius:20px; padding:3px 10px; font-size:11px; color:#90caf9; white-space:nowrap; }
+.pill span { color:#fff; font-weight:700; margin-left:4px; }
+#conn { margin-left:auto; font-size:11px; font-weight:700; padding:3px 12px; border-radius:20px; }
+.conn-online { background:#0a2a0a; color:#4caf50; border:1px solid #4caf50; }
+.conn-offline { background:#2a0a0a; color:#f44336; border:1px solid #f44336; }
+
+#globe-container { position:relative; background:#060912; overflow:hidden; }
+#globe-canvas { width:100%; height:100%; display:block; }
+#globe-msg { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  color:#546e7a; font-size:13px; text-align:center; pointer-events:none; }
+
+#right-panel { background:#0d1224; border-left:1px solid #1e2d4a; display:flex; flex-direction:column; overflow:hidden; }
+.rp-section { border-bottom:1px solid #1e2d4a; padding:8px 10px; }
+.rp-title { font-size:9px; font-weight:700; letter-spacing:1.5px; color:#4fc3f7; text-transform:uppercase; margin-bottom:6px; }
+
+#bottom-panel { grid-column:1/-1; background:#0d1224; border-top:1px solid #1e2d4a; display:grid; grid-template-columns:1fr 1fr 1fr; }
+.bp-section { padding:8px 12px; border-right:1px solid #1e2d4a; overflow:hidden; }
+.bp-section:last-child { border-right:none; }
+.bp-title { font-size:9px; font-weight:700; letter-spacing:1.5px; color:#4fc3f7; text-transform:uppercase; margin-bottom:6px; }
+
+.cdm-item { padding:5px 8px; margin-bottom:3px; border-radius:4px; font-size:10px; border-left:3px solid; line-height:1.5; }
 .cdm-crit { background:#1a0808; border-color:#f44336; color:#ff8a80; }
 .cdm-warn { background:#1a1208; border-color:#ff9800; color:#ffcc80; }
 .cdm-safe { background:#081a0e; border-color:#4caf50; color:#a5d6a7; }
+
 .fuel-row { display:flex; align-items:center; gap:6px; margin:2px 0; }
-.fuel-label { width:80px; font-size:10px; color:#90caf9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.fuel-label { width:78px; font-size:10px; color:#90caf9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .fuel-track { flex:1; height:7px; background:#1e2d4a; border-radius:4px; overflow:hidden; }
 .fuel-fill { height:100%; border-radius:4px; transition:width 0.8s; }
-.fuel-val { width:38px; text-align:right; font-size:9px; color:#ccc; }
-#log-box { font-size:9px; color:#78909c; overflow-y:auto; height:150px; line-height:1.6; }
+.fuel-val { width:36px; text-align:right; font-size:9px; color:#ccc; }
+.fuel-status { font-size:8px; width:44px; }
+
+#log-box { font-size:9px; color:#78909c; overflow-y:auto; height:170px; line-height:1.6; }
 </style>
 </head>
 <body>
@@ -96,44 +54,49 @@ body { background: #0a0e1a; color: #e0e6f0; font-family: 'Segoe UI', sans-serif;
 
 <div id="topbar">
   <h1>ORBITAL INSIGHT — ACM</h1>
-  <div class="pill">Satellites <span id="st-sats">0</span></div>
-  <div class="pill">Debris <span id="st-deb">0</span></div>
-  <div class="pill">CDM Alerts <span id="st-cdm">0</span></div>
-  <div class="pill">Collisions <span id="st-col">0</span></div>
-  <div class="pill">Avoided <span id="st-avo">0</span></div>
-  <div class="pill">Fleet Fuel <span id="st-fuel">--</span> kg</div>
-  <div class="pill">Total ΔV <span id="st-dv">0</span> m/s</div>
-  <div class="pill">Time <span id="st-time">--</span></div>
-  <div id="conn" style="color:#f44336">OFFLINE</div>
+  <div class="pill">Satellites <span id="st-sats">—</span></div>
+  <div class="pill">Debris <span id="st-deb">—</span></div>
+  <div class="pill">CDM Alerts <span id="st-cdm">—</span></div>
+  <div class="pill">Collisions <span id="st-col">—</span></div>
+  <div class="pill">Avoided <span id="st-avo">—</span></div>
+  <div class="pill">Fleet Fuel <span id="st-fuel">—</span> kg</div>
+  <div class="pill">Total ΔV <span id="st-dv">—</span> m/s</div>
+  <div class="pill">Time <span id="st-time">—</span></div>
+  <div id="conn" class="conn-offline">OFFLINE</div>
 </div>
 
 <div id="globe-container">
   <canvas id="globe-canvas"></canvas>
+  <div id="globe-msg">
+    <div style="font-size:28px;margin-bottom:8px;">🌍</div>
+    <div>Waiting for satellite data...</div>
+    <div style="font-size:11px;margin-top:4px;color:#37474f">Send telemetry to see satellites on globe</div>
+  </div>
 </div>
 
 <div id="right-panel">
- <div class="rp-section" style="flex:0 0 auto">
-    <div class="rp-title">Bullseye — Conjunction View</div>
-    <canvas id="bullseye-canvas" width="318" height="110"></canvas>
+  <div class="rp-section" style="flex:0 0 auto;">
+    <div class="rp-title">Conjunction Alerts</div>
+    <div id="cdm-list" style="overflow-y:auto;max-height:170px;">
+      <div style="color:#546e7a;font-size:10px;padding:4px;">No data yet — send telemetry</div>
+    </div>
   </div>
-  <div class="rp-section" style="flex:0 0 auto">
-    <div class="rp-title">Fleet Uptime Score</div>
-    <div id="uptime-panel" style="display:flex;flex-wrap:wrap;gap:4px;padding:2px"></div>
-  </div>
-  <div class="rp-section" style="flex:1;overflow:hidden">
+  <div class="rp-section" style="flex:1;overflow:hidden;">
     <div class="rp-title">Fleet Fuel Status</div>
-    <div id="fuel-list" style="overflow-y:auto;max-height:180px"></div>
+    <div id="fuel-list" style="overflow-y:auto;max-height:180px;">
+      <div style="color:#546e7a;font-size:10px;padding:4px;">No satellites tracked yet</div>
+    </div>
   </div>
-  <div class="rp-section" style="flex:0 0 auto">
+  <div class="rp-section" style="flex:0 0 auto;">
     <div class="rp-title">Bullseye — Conjunction View</div>
-    <canvas id="bullseye-canvas" width="318" height="130"></canvas>
+    <canvas id="bullseye-canvas" width="318" height="120"></canvas>
   </div>
 </div>
 
 <div id="bottom-panel">
   <div class="bp-section">
     <div class="bp-title">Maneuver Timeline (Gantt)</div>
-    <canvas id="gantt-canvas" width="580" height="175"></canvas>
+    <canvas id="gantt-canvas" width="560" height="175"></canvas>
   </div>
   <div class="bp-section">
     <div class="bp-title">Ground Track + Terminator</div>
@@ -149,104 +112,102 @@ body { background: #0a0e1a; color: #e0e6f0; font-family: 'Segoe UI', sans-serif;
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-const API = 'http://localhost:8000';
-let data = {
-  satellites: [], debris_cloud: [], cdm_warnings: [],
-  collision_count: 0, conjunctions_avoided: 0,
-  total_dv_fleet_m_s: 0, fleet_fuel_avg_kg: 0,
-  executed_maneuvers: [], timestamp: '', sim_elapsed_seconds: 0
-};
+// ── STATE ────────────────────────────────────────────────────────
+let data = null;
 let satTrails = {};
 let ganttLog = [];
+let isConnected = false;
+let fetchCount = 0;
 
-// ── THREE.JS GLOBE ──────────────────────────────────────────────
+// ── THREE.JS GLOBE ───────────────────────────────────────────────
 const canvas = document.getElementById('globe-canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-camera.position.set(0, 0, 2.8);
+const camera = new THREE.PerspectiveCamera(45,1,0.1,1000);
+camera.position.set(0,0,2.8);
 
-const earthGeo = new THREE.SphereGeometry(1, 64, 64);
-const earthMat = new THREE.MeshPhongMaterial({ color: 0x1a3a6b, emissive: 0x0a1a3a, shininess: 20 });
-const earth = new THREE.Mesh(earthGeo, earthMat);
+const earth = new THREE.Mesh(
+  new THREE.SphereGeometry(1,64,64),
+  new THREE.MeshPhongMaterial({ color:0x1a3a6b, emissive:0x0a1a3a, shininess:20 })
+);
 scene.add(earth);
 
-const gridMesh = new THREE.Mesh(
-  new THREE.SphereGeometry(1.001, 24, 24),
-  new THREE.MeshBasicMaterial({ color: 0x1e3a5f, wireframe: true, transparent: true, opacity: 0.25 })
-);
-scene.add(gridMesh);
+scene.add(new THREE.Mesh(
+  new THREE.SphereGeometry(1.001,24,24),
+  new THREE.MeshBasicMaterial({ color:0x1e3a5f, wireframe:true, transparent:true, opacity:0.25 })
+));
 
-const atmMesh = new THREE.Mesh(
-  new THREE.SphereGeometry(1.06, 32, 32),
-  new THREE.MeshPhongMaterial({ color: 0x4fc3f7, transparent: true, opacity: 0.07, side: THREE.BackSide })
-);
-scene.add(atmMesh);
+scene.add(new THREE.Mesh(
+  new THREE.SphereGeometry(1.06,32,32),
+  new THREE.MeshPhongMaterial({ color:0x4fc3f7, transparent:true, opacity:0.07, side:THREE.BackSide })
+));
 
-scene.add(new THREE.AmbientLight(0x223355, 1.2));
-const sun = new THREE.DirectionalLight(0xffffff, 1.5);
-sun.position.set(5, 3, 5);
+scene.add(new THREE.AmbientLight(0x223355,1.2));
+const sun = new THREE.DirectionalLight(0xffffff,1.5);
+sun.position.set(5,3,5);
 scene.add(sun);
 
 const starVerts = [];
-for (let i = 0; i < 4000; i++) {
-  const th = Math.random() * Math.PI * 2;
-  const ph = Math.acos(2 * Math.random() - 1);
-  const r = 80 + Math.random() * 20;
+for (let i=0;i<4000;i++) {
+  const th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1), r=80+Math.random()*20;
   starVerts.push(r*Math.sin(ph)*Math.cos(th), r*Math.sin(ph)*Math.sin(th), r*Math.cos(ph));
 }
 const starGeo = new THREE.BufferGeometry();
-starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
-scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.12, transparent: true, opacity: 0.85 })));
+starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts,3));
+scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color:0xffffff, size:0.12, transparent:true, opacity:0.85 })));
 
-let satPoints = null, debPoints = null;
+let satPoints=null, debPoints=null;
 
-function ll2xyz(lat, lon, r = 1.02) {
-  const phi = (90 - lat) * Math.PI / 180;
-  const th = (lon + 180) * Math.PI / 180;
-  return new THREE.Vector3(
-    -r * Math.sin(phi) * Math.cos(th),
-     r * Math.cos(phi),
-     r * Math.sin(phi) * Math.sin(th)
-  );
+function ll2xyz(lat,lon,r=1.02) {
+  const phi=(90-lat)*Math.PI/180, th=(lon+180)*Math.PI/180;
+  return new THREE.Vector3(-r*Math.sin(phi)*Math.cos(th), r*Math.cos(phi), r*Math.sin(phi)*Math.sin(th));
 }
 
 function updateGlobe() {
-  if (satPoints) { scene.remove(satPoints); satPoints.geometry.dispose(); }
-  if (debPoints) { scene.remove(debPoints); debPoints.geometry.dispose(); }
+  if (!data) return;
+  if (satPoints) { scene.remove(satPoints); satPoints.geometry.dispose(); satPoints=null; }
+  if (debPoints) { scene.remove(debPoints); debPoints.geometry.dispose(); debPoints=null; }
 
   const sats = data.satellites || [];
+  const debris = data.debris_cloud || [];
+
+  const globeMsg = document.getElementById('globe-msg');
+  if (sats.length === 0 && debris.length === 0) {
+    globeMsg.style.display = 'block';
+  } else {
+    globeMsg.style.display = 'none';
+  }
+
   if (sats.length > 0) {
     const geo = new THREE.BufferGeometry();
-    const verts = [], colors = [];
+    const verts=[], colors=[];
     sats.forEach(s => {
       const v = ll2xyz(s.lat, s.lon, 1.06);
-      verts.push(v.x, v.y, v.z);
-      const fp = s.fuel_pct / 100;
-      if (fp > 0.5) colors.push(0, 0.9, 1);
-      else if (fp > 0.2) colors.push(1, 0.6, 0);
-      else colors.push(1, 0.2, 0.1);
+      verts.push(v.x,v.y,v.z);
+      const fp = (s.fuel_pct||100)/100;
+      if (fp>0.5) colors.push(0,0.9,1);
+      else if (fp>0.2) colors.push(1,0.6,0);
+      else colors.push(1,0.2,0.1);
     });
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
-    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    satPoints = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.05, vertexColors: true }));
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(verts,3));
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors,3));
+    satPoints = new THREE.Points(geo, new THREE.PointsMaterial({ size:0.06, vertexColors:true }));
     scene.add(satPoints);
   }
 
-  const debris = data.debris_cloud || [];
   if (debris.length > 0) {
     const geo = new THREE.BufferGeometry();
-    const verts = [], colors = [];
+    const verts=[], colors=[];
     debris.forEach(d => {
-      const alt = (d[3] || 400) / 6378;
-      const v = ll2xyz(d[1], d[2], 1.02 + alt * 0.3);
-      verts.push(v.x, v.y, v.z);
-      colors.push(1, 0.25, 0.05);
+      const alt = ((d[3]||400)/6378)*0.3;
+      const v = ll2xyz(d[1], d[2], 1.02+alt);
+      verts.push(v.x,v.y,v.z);
+      colors.push(1,0.25,0.05);
     });
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
-    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    debPoints = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.012, vertexColors: true, transparent: true, opacity: 0.7 }));
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(verts,3));
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors,3));
+    debPoints = new THREE.Points(geo, new THREE.PointsMaterial({ size:0.014, vertexColors:true, transparent:true, opacity:0.7 }));
     scene.add(debPoints);
   }
 }
@@ -254,16 +215,16 @@ function updateGlobe() {
 function resizeGlobe() {
   const c = document.getElementById('globe-container');
   renderer.setSize(c.clientWidth, c.clientHeight);
-  camera.aspect = c.clientWidth / c.clientHeight;
+  camera.aspect = c.clientWidth/c.clientHeight;
   camera.updateProjectionMatrix();
 }
 resizeGlobe();
 window.addEventListener('resize', resizeGlobe);
 
-let drag = false, prev = {x:0,y:0};
-canvas.addEventListener('mousedown', e => { drag=true; prev={x:e.clientX,y:e.clientY}; });
-canvas.addEventListener('mouseup', () => drag=false);
-canvas.addEventListener('mousemove', e => {
+let drag=false, prev={x:0,y:0};
+canvas.addEventListener('mousedown', e=>{ drag=true; prev={x:e.clientX,y:e.clientY}; });
+canvas.addEventListener('mouseup', ()=>drag=false);
+canvas.addEventListener('mousemove', e=>{
   if (!drag) return;
   earth.rotation.y += (e.clientX-prev.x)*0.005;
   earth.rotation.x += (e.clientY-prev.y)*0.005;
@@ -273,12 +234,12 @@ canvas.addEventListener('mousemove', e => {
 (function animate() {
   requestAnimationFrame(animate);
   earth.rotation.y += 0.0006;
-  gridMesh.rotation.y += 0.0006;
-  renderer.render(scene, camera);
+  renderer.render(scene,camera);
 })();
 
-// ── TOPBAR STATS ────────────────────────────────────────────────
+// ── TOPBAR STATS ─────────────────────────────────────────────────
 function updateStats() {
+  if (!data) return;
   document.getElementById('st-sats').textContent = (data.satellites||[]).length;
   document.getElementById('st-deb').textContent = (data.debris_cloud||[]).length;
   document.getElementById('st-cdm').textContent = (data.cdm_warnings||[]).length;
@@ -286,15 +247,16 @@ function updateStats() {
   document.getElementById('st-avo').textContent = data.conjunctions_avoided||0;
   document.getElementById('st-fuel').textContent = (data.fleet_fuel_avg_kg||0).toFixed(1);
   document.getElementById('st-dv').textContent = (data.total_dv_fleet_m_s||0).toFixed(3);
-  document.getElementById('st-time').textContent = (data.timestamp||'--').substr(11,8);
+  document.getElementById('st-time').textContent = (data.timestamp||'').substr(11,8)||'—';
 }
 
-// ── CDM ALERTS ──────────────────────────────────────────────────
+// ── CDM ALERTS ───────────────────────────────────────────────────
 function updateCDM() {
   const el = document.getElementById('cdm-list');
+  if (!data) return;
   const warnings = data.cdm_warnings || [];
   if (warnings.length === 0) {
-    el.innerHTML = '<div style="color:#4caf50;font-size:10px;padding:4px">All clear — no conjunctions detected</div>';
+    el.innerHTML = '<div style="color:#4caf50;font-size:10px;padding:4px;"><b>✓ All clear</b> — no conjunctions detected</div>';
     return;
   }
   el.innerHTML = warnings.slice(0,10).map(w => {
@@ -310,183 +272,159 @@ function updateCDM() {
   }).join('');
 }
 
-// ── FUEL GAUGES ─────────────────────────────────────────────────
+// ── FUEL GAUGES ──────────────────────────────────────────────────
 function updateFuel() {
   const el = document.getElementById('fuel-list');
+  if (!data) return;
   const sats = data.satellites || [];
   if (sats.length === 0) {
-    el.innerHTML = '<div style="color:#546e7a;font-size:10px">No satellites tracked yet</div>';
+    el.innerHTML = '<div style="color:#546e7a;font-size:10px;padding:4px;">No satellites tracked yet — send telemetry data</div>';
     return;
   }
   el.innerHTML = sats.map(s => {
     const pct = Math.min(100, Math.max(0, s.fuel_pct || (s.fuel_kg/50*100)));
-    const color = pct > 40 ? '#4caf50' : pct > 15 ? '#ff9800' : '#f44336';
-    const status = s.status || 'NOMINAL';
-    const statusColor = status === 'NOMINAL' ? '#4caf50' : status === 'OUTAGE' ? '#ff9800' : '#9c27b0';
+    const color = pct>40?'#4caf50':pct>15?'#ff9800':'#f44336';
+    const status = s.status||'NOMINAL';
+    const statusColor = status==='NOMINAL'?'#4caf50':status==='OUTAGE'?'#ff9800':'#9c27b0';
     return `<div class="fuel-row">
       <div class="fuel-label" title="${s.id}">${s.id}</div>
-      <div class="fuel-track">
-        <div class="fuel-fill" style="width:${pct}%;background:${color}"></div>
-      </div>
+      <div class="fuel-track"><div class="fuel-fill" style="width:${pct}%;background:${color}"></div></div>
       <div class="fuel-val">${(s.fuel_kg||0).toFixed(1)}kg</div>
-      <div style="font-size:8px;color:${statusColor};width:40px">${status}</div>
+      <div class="fuel-status" style="color:${statusColor};font-size:8px;">${status}</div>
     </div>`;
   }).join('');
 }
 
-// ── BULLSEYE ────────────────────────────────────────────────────
+// ── BULLSEYE ─────────────────────────────────────────────────────
 function drawBullseye() {
   const cv = document.getElementById('bullseye-canvas');
   const ctx = cv.getContext('2d');
-  const W = cv.width, H = cv.height;
+  const W=cv.width, H=cv.height;
   ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = '#060912';
+  ctx.fillStyle='#060912';
   ctx.fillRect(0,0,W,H);
 
-  const cx = W/2, cy = H/2 + 5;
-  const maxR = Math.min(cx, cy) - 14;
+  const cx=W/2, cy=H/2+5;
+  const maxR=Math.min(cx,cy)-14;
 
-  const rings = [
-    { r: 1.0, color: '#f44336', label: '0.1km' },
-    { r: 0.65, color: '#ff9800', label: '1km' },
-    { r: 0.35, color: '#4caf50', label: '5km' }
-  ];
-  rings.forEach(ring => {
-    ctx.beginPath();
-    ctx.arc(cx, cy, maxR * ring.r, 0, Math.PI*2);
-    ctx.strokeStyle = ring.color;
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4,4]);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = ring.color;
-    ctx.font = '8px monospace';
-    ctx.fillText(ring.label, cx + maxR*ring.r + 2, cy);
+  [{r:1.0,color:'#f44336',label:'0.1km'},{r:0.65,color:'#ff9800',label:'1km'},{r:0.35,color:'#4caf50',label:'5km'}].forEach(ring=>{
+    ctx.beginPath(); ctx.arc(cx,cy,maxR*ring.r,0,Math.PI*2);
+    ctx.strokeStyle=ring.color; ctx.lineWidth=1; ctx.setLineDash([4,4]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=ring.color; ctx.font='8px monospace';
+    ctx.fillText(ring.label, cx+maxR*ring.r+2, cy);
   });
 
-  ctx.beginPath();
-  ctx.arc(cx, cy, 5, 0, Math.PI*2);
-  ctx.fillStyle = '#00e5ff';
-  ctx.fill();
+  ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2);
+  ctx.fillStyle='#00e5ff'; ctx.fill();
 
+  if (!data) { return; }
   const warnings = data.cdm_warnings || [];
-  warnings.slice(0,20).forEach((w, i) => {
-    const miss = w.miss_distance_km || 10;
-    const angle = (i / Math.max(warnings.length,1)) * Math.PI * 2;
-    const distRatio = Math.min(miss / 10, 1);
-    const x = cx + Math.cos(angle) * maxR * distRatio;
-    const y = cy + Math.sin(angle) * maxR * distRatio;
-    ctx.beginPath();
-    ctx.arc(x, y, 4, 0, Math.PI*2);
-    ctx.fillStyle = w.critical ? '#f44336' : miss < 1 ? '#ff9800' : '#4caf50';
+  if (warnings.length === 0) {
+    ctx.fillStyle='#4caf50'; ctx.font='9px monospace'; ctx.textAlign='center';
+    ctx.fillText('All clear', cx, cy+25); ctx.textAlign='left';
+    return;
+  }
+  warnings.slice(0,20).forEach((w,i) => {
+    const miss = w.miss_distance_km||10;
+    const angle = (i/Math.max(warnings.length,1))*Math.PI*2;
+    const distRatio = Math.min(miss/10,1);
+    const x=cx+Math.cos(angle)*maxR*distRatio;
+    const y=cy+Math.sin(angle)*maxR*distRatio;
+    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle = w.critical?'#f44336':miss<1?'#ff9800':'#4caf50';
     ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=0.5; ctx.stroke();
   });
 
-  ctx.fillStyle = '#546e7a';
-  ctx.font = '8px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('Relative approach — debris proximity', cx, H - 3);
-  ctx.textAlign = 'left';
+  ctx.fillStyle='#546e7a'; ctx.font='8px monospace'; ctx.textAlign='center';
+  ctx.fillText('Relative approach — debris proximity', cx, H-3);
+  ctx.textAlign='left';
 }
 
-// ── GROUND TRACK ────────────────────────────────────────────────
+// ── GROUND TRACK ─────────────────────────────────────────────────
 function drawGroundTrack() {
   const cv = document.getElementById('track-canvas');
   const ctx = cv.getContext('2d');
-  const W = cv.width, H = cv.height;
+  const W=cv.width, H=cv.height;
   ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = '#060912';
-  ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#060912'; ctx.fillRect(0,0,W,H);
 
-  ctx.strokeStyle = '#0d1830';
-  ctx.lineWidth = 0.5;
-  for (let i=0;i<=6;i++) { ctx.beginPath();ctx.moveTo(i*W/6,0);ctx.lineTo(i*W/6,H);ctx.stroke(); }
-  for (let i=0;i<=4;i++) { ctx.beginPath();ctx.moveTo(0,i*H/4);ctx.lineTo(W,i*H/4);ctx.stroke(); }
+  ctx.strokeStyle='#0d1830'; ctx.lineWidth=0.5;
+  for(let i=0;i<=6;i++){ctx.beginPath();ctx.moveTo(i*W/6,0);ctx.lineTo(i*W/6,H);ctx.stroke();}
+  for(let i=0;i<=4;i++){ctx.beginPath();ctx.moveTo(0,i*H/4);ctx.lineTo(W,i*H/4);ctx.stroke();}
 
-  ctx.strokeStyle = '#1a3a5a';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke();
+  ctx.strokeStyle='#1a3a5a'; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.stroke();
 
   // Terminator line
-  const now = new Date();
-  const doy = Math.floor((now - new Date(now.getFullYear(),0,0))/(864e5));
-  const decl = 23.45 * Math.sin((2*Math.PI/365)*(doy-81));
-  const utcH = now.getUTCHours() + now.getUTCMinutes()/60;
-  const sunLon = -((utcH/24)*360 - 180);
+  const now=new Date();
+  const doy=Math.floor((now-new Date(now.getFullYear(),0,0))/864e5);
+  const decl=23.45*Math.sin((2*Math.PI/365)*(doy-81));
+  const utcH=now.getUTCHours()+now.getUTCMinutes()/60;
+  const sunLon=-((utcH/24)*360-180);
 
-  ctx.strokeStyle = 'rgba(255,210,60,0.7)';
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([5,4]);
+  ctx.strokeStyle='rgba(255,210,60,0.7)'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
   ctx.beginPath();
-  let first = true;
-  for (let lon=-180;lon<=180;lon+=3) {
-    const rad = Math.atan2(-Math.cos((lon-sunLon)*Math.PI/180), Math.tan(decl*Math.PI/180));
-    const tLat = rad * 180 / Math.PI;
+  let first=true;
+  for(let lon=-180;lon<=180;lon+=3) {
+    const rad=Math.atan2(-Math.cos((lon-sunLon)*Math.PI/180), Math.tan(decl*Math.PI/180));
+    const tLat=rad*180/Math.PI;
     const x=(lon+180)/360*W, y=(90-tLat)/180*H;
-    first ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-    first=false;
+    first?ctx.moveTo(x,y):ctx.lineTo(x,y); first=false;
   }
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  ctx.fillStyle='rgba(255,210,60,0.06)';
-  ctx.font='8px monospace';
-  ctx.fillStyle='rgba(255,210,60,0.5)';
+  ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle='rgba(255,210,60,0.5)'; ctx.font='8px monospace';
   ctx.fillText('Day/Night', 4, H-4);
 
-  // Orbit trails
-  const sats = data.satellites || [];
-  sats.forEach(s => {
-    if (!satTrails[s.id]) satTrails[s.id] = [];
-    satTrails[s.id].push({lat:s.lat, lon:s.lon});
-    if (satTrails[s.id].length > 80) satTrails[s.id].shift();
+  if (!data) return;
 
-    const trail = satTrails[s.id];
-    for (let i=1;i<trail.length;i++) {
-      const alpha = (i/trail.length)*0.7;
-      ctx.strokeStyle = `rgba(0,229,255,${alpha})`;
-      ctx.lineWidth = 1;
+  const sats = data.satellites||[];
+  if (sats.length === 0) {
+    ctx.fillStyle='#546e7a'; ctx.font='10px monospace'; ctx.textAlign='center';
+    ctx.fillText('No satellites — send telemetry data', W/2, H/2);
+    ctx.textAlign='left';
+    return;
+  }
+
+  sats.forEach(s => {
+    if (!satTrails[s.id]) satTrails[s.id]=[];
+    satTrails[s.id].push({lat:s.lat,lon:s.lon});
+    if (satTrails[s.id].length>80) satTrails[s.id].shift();
+
+    const trail=satTrails[s.id];
+    for(let i=1;i<trail.length;i++) {
+      const alpha=(i/trail.length)*0.7;
+      ctx.strokeStyle=`rgba(0,229,255,${alpha})`; ctx.lineWidth=1;
       ctx.beginPath();
-      ctx.moveTo((trail[i-1].lon+180)/360*W, (90-trail[i-1].lat)/180*H);
-      ctx.lineTo((trail[i].lon+180)/360*W, (90-trail[i].lat)/180*H);
+      ctx.moveTo((trail[i-1].lon+180)/360*W,(90-trail[i-1].lat)/180*H);
+      ctx.lineTo((trail[i].lon+180)/360*W,(90-trail[i].lat)/180*H);
       ctx.stroke();
     }
 
-    // Predicted trajectory dashed
-    ctx.strokeStyle='rgba(255,255,100,0.35)';
-    ctx.lineWidth=1;
-    ctx.setLineDash([3,5]);
+    ctx.strokeStyle='rgba(255,255,100,0.35)'; ctx.lineWidth=1; ctx.setLineDash([3,5]);
     ctx.beginPath();
-    for (let step=0;step<=15;step++) {
-      const t = step/15;
-      const pLon = ((s.lon + t*360*0.063)+180)%360-180;
-      const pLat = s.lat * Math.cos(t*Math.PI*0.5);
+    for(let step=0;step<=15;step++) {
+      const t=step/15;
+      const pLon=((s.lon+t*360*0.063)+180)%360-180;
+      const pLat=s.lat*Math.cos(t*Math.PI*0.5);
       const x=(pLon+180)/360*W, y=(90-pLat)/180*H;
-      step===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      step===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     }
-    ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.stroke(); ctx.setLineDash([]);
 
     const x=(s.lon+180)/360*W, y=(90-s.lat)/180*H;
-    const fp = (s.fuel_pct||100)/100;
-    ctx.beginPath();
-    ctx.arc(x,y,4,0,Math.PI*2);
-    ctx.fillStyle = fp>0.4?'#00e5ff':fp>0.15?'#ff9800':'#f44336';
-    ctx.fill();
-    ctx.strokeStyle='#fff';
-    ctx.lineWidth=0.5;
-    ctx.stroke();
+    const fp=(s.fuel_pct||100)/100;
+    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle=fp>0.4?'#00e5ff':fp>0.15?'#ff9800':'#f44336';
+    ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=0.5; ctx.stroke();
+
+    ctx.fillStyle='#90caf9'; ctx.font='8px monospace';
+    ctx.fillText(s.id.slice(-4), x+6, y+3);
   });
 
   // Ground stations
-  const gs = [
-    [13.03,77.52,'BLR'],[78.23,15.41,'SVL'],[35.43,-116.89,'GLD'],
-    [-53.15,-70.92,'PTA'],[28.55,77.19,'DEL'],[-77.85,166.67,'MCM']
-  ];
-  gs.forEach(([lat,lon,name]) => {
+  [[13.03,77.52,'BLR'],[78.23,15.41,'SVL'],[35.43,-116.89,'GLD'],
+   [-53.15,-70.92,'PTA'],[28.55,77.19,'DEL'],[-77.85,166.67,'MCM']].forEach(([lat,lon,name])=>{
     const x=(lon+180)/360*W, y=(90-lat)/180*H;
     ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2);
     ctx.fillStyle='#4caf50'; ctx.fill();
@@ -495,184 +433,129 @@ function drawGroundTrack() {
   });
 }
 
-// ── GANTT TIMELINE ──────────────────────────────────────────────
+// ── GANTT TIMELINE ────────────────────────────────────────────────
 function drawGantt() {
   const cv = document.getElementById('gantt-canvas');
   const ctx = cv.getContext('2d');
-  const W = cv.width, H = cv.height;
+  const W=cv.width, H=cv.height;
   ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#060912';
-  ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#060912'; ctx.fillRect(0,0,W,H);
 
-  const maneuvers = data.executed_maneuvers || [];
-  if (maneuvers.length > 0) {
-    maneuvers.forEach(m => {
-      const exists = ganttLog.find(g => g.burn_id === m.burn_id && g.satellite_id === m.satellite_id);
-      if (!exists) {
-        ganttLog.push(m);
-        addLog(`${m.type||'BURN'}: ${m.satellite_id} — ${m.burn_id||''} fuel used: ${(m.fuel_used||0).toFixed(3)}kg`);
-      }
-    });
-  }
-
-  if (ganttLog.length === 0) {
+  if (!data) {
     ctx.fillStyle='#37474f'; ctx.font='10px monospace';
-    ctx.fillText('No maneuvers yet — send telemetry data to trigger COLA', 8, H/2);
+    ctx.fillText('Waiting for data...', 8, H/2);
     return;
   }
 
-  const COLORS = { EVASION:'#f44336', RECOVERY:'#4caf50', GRAVEYARD:'#9c27b0', COOLDOWN:'#263238' };
-  const labelW = 100, timeW = W - labelW - 10;
-  const satIds = [...new Set(ganttLog.map(m=>m.satellite_id))];
-  const maxT = Math.max(...ganttLog.map(m=>(m.time||0)+700), data.sim_elapsed_seconds||3600);
-  const rowH = Math.min(32, (H-30)/Math.max(satIds.length,1));
+  const maneuvers = data.executed_maneuvers||[];
+  maneuvers.forEach(m => {
+    const exists = ganttLog.find(g=>g.burn_id===m.burn_id&&g.satellite_id===m.satellite_id);
+    if (!exists) {
+      ganttLog.push(m);
+      addLog(`${m.type||'BURN'}: ${m.satellite_id} — fuel used: ${(m.fuel_used||0).toFixed(3)}kg`);
+    }
+  });
+
+  if (ganttLog.length===0) {
+    ctx.fillStyle='#37474f'; ctx.font='10px monospace';
+    ctx.fillText('No maneuvers executed yet — run simulation steps to trigger COLA', 8, H/2);
+    return;
+  }
+
+  const COLORS={EVASION:'#f44336',RECOVERY:'#4caf50',GRAVEYARD:'#9c27b0',COOLDOWN:'#263238'};
+  const labelW=100, timeW=W-labelW-10;
+  const satIds=[...new Set(ganttLog.map(m=>m.satellite_id))];
+  const maxT=Math.max(...ganttLog.map(m=>(m.time||0)+700), data.sim_elapsed_seconds||3600);
+  const rowH=Math.min(32,(H-30)/Math.max(satIds.length,1));
 
   ctx.fillStyle='#37474f'; ctx.font='8px monospace';
-  ctx.fillText('SAT ID', 4, 12);
-  ctx.fillText('Time →', labelW+4, 12);
+  ctx.fillText('SAT ID',4,12);
+  ctx.fillText('Timeline →',labelW+4,12);
 
-  satIds.slice(0,6).forEach((sid,i) => {
-    const y = 18 + i*rowH;
+  satIds.slice(0,6).forEach((sid,i)=>{
+    const y=18+i*rowH;
     ctx.fillStyle='#546e7a'; ctx.font='8px monospace';
-    ctx.fillText(sid.slice(0,13), 2, y+rowH/2+3);
+    ctx.fillText(sid.slice(0,13),2,y+rowH/2+3);
 
-    const burns = ganttLog.filter(m=>m.satellite_id===sid);
-    burns.forEach(m => {
-      const t = m.time||0;
-      const x = labelW + (t/maxT)*timeW;
-      const bw = Math.max(10, (120/maxT)*timeW);
-      const type = m.type || (m.burn_id&&m.burn_id.includes('EVASION')?'EVASION':'RECOVERY');
+    ganttLog.filter(m=>m.satellite_id===sid).forEach(m=>{
+      const t=m.time||0;
+      const x=labelW+(t/maxT)*timeW;
+      const bw=Math.max(10,(120/maxT)*timeW);
+      const type=m.type||(m.burn_id&&m.burn_id.includes('EVASION')?'EVASION':'RECOVERY');
 
-      ctx.fillStyle = COLORS[type]||'#4fc3f7';
-      ctx.fillRect(x, y+2, bw, rowH-6);
+      ctx.fillStyle=COLORS[type]||'#4fc3f7';
+      ctx.fillRect(x,y+2,bw,rowH-6);
       ctx.fillStyle='#fff'; ctx.font='7px monospace';
-      ctx.fillText((type||'').slice(0,3), x+2, y+rowH/2+2);
+      ctx.fillText((type||'').slice(0,3),x+2,y+rowH/2+2);
 
-      const cx2 = x+bw;
-      const cw = (600/maxT)*timeW;
+      const cw=(600/maxT)*timeW;
       ctx.fillStyle=COLORS.COOLDOWN;
-      ctx.fillRect(cx2, y+2, cw, rowH-6);
+      ctx.fillRect(x+bw,y+2,cw,rowH-6);
       ctx.fillStyle='#607d8b'; ctx.font='6px monospace';
-      ctx.fillText('600s', cx2+1, y+rowH/2+2);
+      ctx.fillText('600s',x+bw+1,y+rowH/2+2);
     });
   });
-  function updateUptime() {
-  const el = document.getElementById('uptime-panel');
-  const sats = data.satellites || [];
-  if (sats.length === 0) {
-    el.innerHTML = '<div style="color:#546e7a;font-size:10px">No data</div>';
-    return;
-  }
-  el.innerHTML = sats.map(s => {
-    const pct = s.uptime_pct || 0;
-    const color = pct > 80 ? '#4caf50' : pct > 50 ? '#ff9800' : '#f44336';
-    const eol = s.status === 'EOL';
-    return `<div style="background:${eol?'#2a0a2a':'#0d1a2a'};border:1px solid ${eol?'#9c27b0':color};border-radius:4px;padding:3px 6px;font-size:9px;min-width:80px">
-      <div style="color:${eol?'#ce93d8':'#90caf9'};font-weight:700">${s.id.slice(-6)}</div>
-      <div style="color:${color}">${eol?'EOL/GRAVEYARD':`Uptime: ${pct.toFixed(1)}%`}</div>
-      ${eol?'':'<div style="height:3px;background:#1e2d4a;border-radius:2px;margin-top:2px"><div style="width:'+pct+'%;height:100%;background:'+color+';border-radius:2px"></div></div>'}
-    </div>`;
-  }).join('');
-}
-function drawDVGraph() {
-  const cv = document.getElementById('gantt-canvas');
-  if (!cv) return;
-  const sats = data.satellites || [];
-  if (sats.length === 0) return;
 
-  const existing = document.getElementById('dv-canvas');
-  let dvcv = existing;
-  if (!dvcv) {
-    dvcv = document.createElement('canvas');
-    dvcv.id = 'dv-canvas';
-    dvcv.width = 580;
-    dvcv.height = 60;
-    dvcv.style.display = 'block';
-    dvcv.style.marginTop = '4px';
-    cv.parentNode.insertBefore(dvcv, cv.nextSibling);
-  }
-
-  const ctx = dvcv.getContext('2d');
-  const W = dvcv.width, H = dvcv.height;
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = '#060912';
-  ctx.fillRect(0,0,W,H);
-
-  ctx.fillStyle = '#546e7a';
-  ctx.font = '8px monospace';
-  ctx.fillText('ΔV Cost Analysis — Fuel Consumed vs Collisions Avoided', 4, 10);
-
-  const avoided = data.conjunctions_avoided || 0;
-  const totalDV = data.total_dv_fleet_m_s || 0;
-  const avgFuel = data.fleet_fuel_avg_kg || 50;
-  const fuelUsed = 50 - avgFuel;
-
-  const barW = Math.min((avoided / Math.max(avoided,5)) * (W*0.4), W*0.4);
-  const fuelBarW = Math.min((fuelUsed / 50) * (W*0.4), W*0.4);
-
-  ctx.fillStyle = '#4caf50';
-  ctx.fillRect(160, 18, barW, 14);
-  ctx.fillStyle = '#90caf9';
-  ctx.font = '9px monospace';
-  ctx.fillText(`Conjunctions avoided: ${avoided}`, 4, 28);
-  ctx.fillStyle = '#4caf50';
-  ctx.fillText(avoided, 162+barW, 28);
-
-  ctx.fillStyle = '#f44336';
-  ctx.fillRect(160, 38, fuelBarW, 14);
-  ctx.fillStyle = '#90caf9';
-  ctx.font = '9px monospace';
-  ctx.fillText(`Fuel consumed: ${fuelUsed.toFixed(1)}kg  ΔV: ${totalDV.toFixed(2)}m/s`, 4, 50);
-  ctx.fillStyle = '#f44336';
-  ctx.fillText(`${fuelUsed.toFixed(1)}kg`, 162+fuelBarW, 50);
-}
-
-  // Axis
   ctx.strokeStyle='#1e2d4a'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(labelW,H-14); ctx.lineTo(W-5,H-14); ctx.stroke();
-  for (let i=0;i<=4;i++) {
+  ctx.beginPath();ctx.moveTo(labelW,H-14);ctx.lineTo(W-5,H-14);ctx.stroke();
+  for(let i=0;i<=4;i++){
     const x=labelW+(i/4)*timeW;
     ctx.fillStyle='#546e7a'; ctx.font='7px monospace';
     ctx.fillText(`${Math.round((i/4)*maxT)}s`,x,H-3);
   }
 
-  // Legend
-  ['EVASION','RECOVERY','GRAVEYARD','COOLDOWN'].forEach((t,i) => {
-    const x = labelW + i*85;
-    ctx.fillStyle=COLORS[t];
-    ctx.fillRect(x, H-28, 10, 8);
+  ['EVASION','RECOVERY','GRAVEYARD','COOLDOWN'].forEach((t,i)=>{
+    const x=labelW+i*85;
+    ctx.fillStyle=COLORS[t]; ctx.fillRect(x,H-28,10,8);
     ctx.fillStyle='#90a4ae'; ctx.font='7px monospace';
-    ctx.fillText(t, x+12, H-22);
+    ctx.fillText(t,x+12,H-22);
   });
 }
 
-// ── SYSTEM LOG ──────────────────────────────────────────────────
+// ── SYSTEM LOG ────────────────────────────────────────────────────
 function addLog(msg) {
   const el=document.getElementById('log-box');
   const t=new Date().toISOString().substr(11,8);
   const div=document.createElement('div');
   div.textContent=`[${t}] ${msg}`;
   el.insertBefore(div,el.firstChild);
-  while(el.children.length>40) el.removeChild(el.lastChild);
+  while(el.children.length>50) el.removeChild(el.lastChild);
 }
 
-// ── MAIN FETCH ──────────────────────────────────────────────────
-let prevCollisions = 0;
-let prevAvoided = 0;
+// ── CONNECTION STATUS ─────────────────────────────────────────────
+function setConnected(ok) {
+  const el=document.getElementById('conn');
+  if (ok===isConnected) return;
+  isConnected=ok;
+  el.textContent=ok?'CONNECTED':'OFFLINE';
+  el.className='conn-'+(ok?'online':'offline');
+  addLog(ok?'Backend connected successfully':'Backend connection lost');
+}
+
+// ── MAIN FETCH LOOP ───────────────────────────────────────────────
+let prevCollisions=0, prevAvoided=0;
 
 async function fetchAll() {
   try {
-    const res = await fetch(`${API}/api/visualization/snapshot`);
-    if (!res.ok) throw new Error('bad response');
-    data = await res.json();
+    const res = await fetch('/api/visualization/snapshot', {
+      method:'GET',
+      headers:{'Accept':'application/json'},
+      cache:'no-store'
+    });
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const newData = await res.json();
+    data = newData;
+    fetchCount++;
 
-    if ((data.collision_count||0) > prevCollisions) {
-      addLog(`COLLISION DETECTED! Total: ${data.collision_count}`);
-      prevCollisions = data.collision_count;
+    setConnected(true);
+
+    if ((data.collision_count||0)>prevCollisions) {
+      addLog(`⚠ COLLISION DETECTED! Total: ${data.collision_count}`);
+      prevCollisions=data.collision_count;
     }
-    if ((data.conjunctions_avoided||0) > prevAvoided) {
-      addLog(`Conjunction avoided! Total avoided: ${data.conjunctions_avoided}`);
-      prevAvoided = data.conjunctions_avoided;
+    if ((data.conjunctions_avoided||0)>prevAvoided) {
+      addLog(`✓ Conjunction avoided! Total: ${data.conjunctions_avoided}`);
+      prevAvoided=data.conjunctions_avoided;
     }
 
     updateGlobe();
@@ -682,67 +565,24 @@ async function fetchAll() {
     drawBullseye();
     drawGroundTrack();
     drawGantt();
-    updateUptime();
-    drawDVGraph();
 
-    document.getElementById('conn').textContent='CONNECTED';
-    document.getElementById('conn').style.color='#4caf50';
   } catch(e) {
-    document.getElementById('conn').textContent='OFFLINE';
-    document.getElementById('conn').style.color='#f44336';
+    setConnected(false);
+    if (fetchCount===0) {
+      drawBullseye();
+      drawGroundTrack();
+      drawGantt();
+    }
   }
 }
 
-// Seed demo data immediately so globe looks alive
-function seedDemo() {
-  data.satellites = Array.from({length:8},(_,i)=>({
-    id:`SAT-Alpha-0${i+1}`,
-    lat:(Math.random()-0.5)*120,
-    lon:(Math.random()-0.5)*360,
-    fuel_kg:15+Math.random()*35,
-    fuel_pct:30+Math.random()*70,
-    status:['NOMINAL','NOMINAL','NOMINAL','OUTAGE'][Math.floor(Math.random()*4)],
-    total_dv_used:Math.random()*5,
-    uptime_pct:70+Math.random()*30,
-    in_slot:Math.random()>0.3 ,
-    uptime_pct: 60+Math.random()*40
-  }));
-  data.debris_cloud = Array.from({length:800},(_,i)=>[
-    `DEB-${i}`,
-    (Math.random()-0.5)*160,
-    (Math.random()-0.5)*360,
-    350+Math.random()*300
-  ]);
-  data.cdm_warnings = [
-    {sat_id:'SAT-Alpha-01',deb_id:'DEB-4821',tca_seconds:180,miss_distance_km:0.045,critical:true,risk_level:'CRITICAL',probability_of_collision:0.87},
-    {sat_id:'SAT-Alpha-03',deb_id:'DEB-9912',tca_seconds:540,miss_distance_km:0.82,critical:false,risk_level:'WARNING',probability_of_collision:0.23},
-    {sat_id:'SAT-Alpha-06',deb_id:'DEB-1123',tca_seconds:2100,miss_distance_km:3.4,critical:false,risk_level:'CAUTION',probability_of_collision:0.04},
-  ];
-  data.executed_maneuvers = [
-    {satellite_id:'SAT-Alpha-01',burn_id:'EVASION_DEB-4821',type:'EVASION',fuel_used:0.42,time:200},
-    {satellite_id:'SAT-Alpha-01',burn_id:'RECOVERY_EVASION_DEB-4821',type:'RECOVERY',fuel_used:0.38,time:900},
-    {satellite_id:'SAT-Alpha-03',burn_id:'EVASION_DEB-9912',type:'EVASION',fuel_used:0.31,time:1500},
-  ];
-  data.collision_count=0;
-  data.conjunctions_avoided=2;
-  data.total_dv_fleet_m_s=8.4;
-  data.fleet_fuel_avg_kg=42.3;
-  data.timestamp=new Date().toISOString();
-  data.sim_elapsed_seconds=3600;
-
-  updateGlobe();
-  updateStats();
-  updateCDM();
-  updateFuel();
-  drawBullseye();
-  drawGroundTrack();
-  drawGantt();
-  addLog('Demo data loaded — connect backend to see live data');
-}
-
-seedDemo();
+// Start fetching immediately and every 2 seconds
 fetchAll();
 setInterval(fetchAll, 2000);
+
+addLog('Dashboard initialized — connecting to backend...');
 </script>
 </body>
 </html>
+HTMLEOF
+echo "Done"
