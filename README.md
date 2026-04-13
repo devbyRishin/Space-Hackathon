@@ -19,7 +19,7 @@ The backend handles all the physics and decision-making. The frontend gives you 
 You need Docker installed. That's the only dependency.
 
 ```bash
-git clone https://github.com/YOURUSERNAME/space-hackathon.git
+git clone https://github.com/devbyRishin/space-hackathon.git
 cd space-hackathon
 docker build -t acm-system .
 docker run -d -p 8000:8000 --name acm acm-system
